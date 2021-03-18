@@ -3,7 +3,7 @@ package blockchain
 import "fmt"
 
 type Blockchain struct {
-	Blocks []*Block
+	Blocks []*Block `json:"blocks"`
 }
 
 func (chain *Blockchain) Init() {

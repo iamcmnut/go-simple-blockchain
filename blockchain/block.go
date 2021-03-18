@@ -6,9 +6,9 @@ import (
 )
 
 type Block struct {
-	Data              string
-	PreviousBlockHash string
-	Nonce             uint32
+	Data              string `json:"data"`
+	PreviousBlockHash string `json:"previousBlockHash"`
+	Nonce             uint32 `json:"nonce"`
 }
 
 func (b *Block) GetHash() string {
