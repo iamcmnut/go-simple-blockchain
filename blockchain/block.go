@@ -3,6 +3,7 @@ package blockchain
 import (
 	"crypto/sha256"
 	"fmt"
+	"math"
 )
 
 type Block struct {
@@ -19,9 +20,13 @@ func (b *Block) GetHash() string {
 	return hash
 }
 
-func (b *Block) GetValidNonce() bool {
+func (b *Block) GetValidNonce(prevNonce uint32) bool {
+	var nonce float64 = 1
+	var pNonce float64 = float64(prevNonce)
 	for b.GetHash()[:4] != "0000" {
-		b.Nonce += 1
+		newNonce := math.Pow(nonce, 2) - math.Pow(pNonce, 2)
+		b.Nonce = uint32(newNonce)
+		nonce += 1
 	}
 
 	return true

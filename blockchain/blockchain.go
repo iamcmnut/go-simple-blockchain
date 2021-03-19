@@ -8,21 +8,30 @@ type Blockchain struct {
 
 func (chain *Blockchain) Init() {
 	geneisBlock := &Block{
-		Data:              "this is genesisblock",
+		Data:              "this is a genesis block",
 		Nonce:             0,
 		PreviousBlockHash: "0000000000000000000000000000000000000000000000000000000000000000",
 	}
 
-	geneisBlock.GetValidNonce()
+	geneisBlock.GetValidNonce(0)
 
 	chain.Blocks = []*Block{geneisBlock}
 }
 
 func (chain *Blockchain) ValidateChain() bool {
-	for _, b := range chain.Blocks {
-		if !b.Validate() {
+	prevBlock := chain.Blocks[0]
+	i := 1
+	for i < len(chain.Blocks) {
+		block := chain.Blocks[i]
+		if block.PreviousBlockHash != prevBlock.GetHash() {
 			return false
 		}
+
+		if !block.Validate() {
+			return false
+		}
+
+		i += 1
 	}
 
 	return true
@@ -57,10 +66,10 @@ func (chain *Blockchain) CreateBlock(data string) (*Block, error) {
 	newBlock := &Block{
 		Data:              data,
 		PreviousBlockHash: latestBlock.GetHash(),
-		Nonce:             0,
+		Nonce:             1,
 	}
 
-	newBlock.GetValidNonce()
+	newBlock.GetValidNonce(latestBlock.Nonce)
 	chain.Blocks = append(chain.Blocks, newBlock)
 	return newBlock, nil
 }
